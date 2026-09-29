@@ -1,0 +1,21 @@
+# Secrets et variables d'environnement
+.env
+.env.*
+!.env.example
+
+# Dépendances PHP
+**/vendor/
+
+# Dépendances JavaScript
+**/node_modules/
+
+# Fichiers générés par Laravel
+backend/public/build/
+backend/public/hot
+backend/storage/*.key
+backend/bootstrap/cache/*.php
+
+# Fichiers de développement
+.DS_Store
+*.log
+.phpunit.result.cache
