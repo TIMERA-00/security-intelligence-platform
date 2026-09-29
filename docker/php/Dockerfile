@@ -20,5 +20,5 @@ COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 # Définir le dossier de travail dans le conteneur
 WORKDIR /var/www/html
 
-# Démarrer le serveur de développement Laravel
-CMD ["php", "artisan", "serve", "--host=0.0.0.0", "--port=8000"]
+# Démarrer Laravel depuis le répertoire public
+CMD ["sh", "-lc", "cd public && php ../artisan serve --host=0.0.0.0 --port=8000"]
