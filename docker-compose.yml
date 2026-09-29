@@ -1,0 +1,44 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: docker/php/Dockerfile
+    container_name: sip-app
+    working_dir: /var/www/html
+    volumes:
+      - ./backend:/var/www/html
+    ports:
+      - "127.0.0.1:8001:8000"
+    environment:
+      APP_ENV: local
+      APP_DEBUG: "true"
+      DB_CONNECTION: pgsql
+      DB_HOST: db
+      DB_PORT: 5432
+      DB_DATABASE: sip_dev
+      DB_USERNAME: sip_user
+      DB_PASSWORD: ${POSTGRES_PASSWORD:?Copie .env.example vers .env et configure POSTGRES_PASSWORD}
+    depends_on:
+      db:
+        condition: service_healthy
+
+  db:
+    image: postgres:17-alpine
+    container_name: sip-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: sip_dev
+      POSTGRES_USER: sip_user
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Copie .env.example vers .env et configure POSTGRES_PASSWORD}
+    ports:
+      - "127.0.0.1:5433:5432"
+    volumes:
+      - sip_postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U sip_user -d sip_dev"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  sip_postgres_data:
